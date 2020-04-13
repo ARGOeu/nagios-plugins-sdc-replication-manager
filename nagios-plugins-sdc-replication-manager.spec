@@ -22,14 +22,14 @@ Nagios probe to check functionality of SDC Replication Manager
 
 install -d %{buildroot}/%{_libexecdir}/argo-monitoring/probes/sdc-replication-manager
 install -d %{buildroot}/%{_sysconfdir}/nagios/plugins/sdc-replication-manager
-install -m 755 check_b2stage_http-api.py %{buildroot}/%{_libexecdir}/argo-monitoring/probes/sdc-replication-manager/replication_manager_check.py
+install -m 755 replication_manager_check.py %{buildroot}/%{_libexecdir}/argo-monitoring/probes/sdc-replication-manager/replication_manager_check.py
 
 %files
 %dir /%{_libexecdir}/argo-monitoring
 %dir /%{_libexecdir}/argo-monitoring/probes/
 %dir /%{_libexecdir}/argo-monitoring/probes/sdc-replication-manager
 
-%attr(0755,root,root) /%{_libexecdir}/argo-monitoring/probes//esdc-replication-manager/replication_manager_check.py
+%attr(0755,root,root) /%{_libexecdir}/argo-monitoring/probes/sdc-replication-manager/replication_manager_check.py
 
 %changelog
 * Tue Apr 14 2020 Themis Zamani  <themiszamani@gmail.com> - 0.2-1
