@@ -21,11 +21,6 @@ def ValidateValues(arguments):
             print_help()
             exit()
 
-        if arguments.rpath is None:
-            print("\nNo replication path provided\n")
-            print_help()
-            exit()
-
         if arguments.hostname is None:
             print("\nNo hostname provided\n")
             print_help()
@@ -74,7 +69,11 @@ def checkHealth(URL, arguments):
            timeout : how long should we wait for a response from the server
     """
     response = None
-    u = URL + arguments.rpath + "api/api_v1/status"
+    iif arguments.rpath is None: :
+        u = URL + "api/api_v1/status"
+    else: 
+        u = URL + arguments.rpath + "api/api_v1/status"
+
     if arguments.debug:
         print("[debugValues] - finalPath: %s" % u)
     timeout = arguments.timeout
