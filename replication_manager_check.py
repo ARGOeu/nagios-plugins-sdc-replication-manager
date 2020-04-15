@@ -69,7 +69,7 @@ def checkHealth(URL, arguments):
            timeout : how long should we wait for a response from the server
     """
     response = None
-    iif arguments.rpath is None: :
+    if arguments.rpath is None: :
         u = URL + "api/api_v1/status"
     else: 
         u = URL + arguments.rpath + "api/api_v1/status"
