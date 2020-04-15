@@ -40,14 +40,14 @@ def ValidateValues(arguments):
 def print_help():
         """ Print help values."""
 
-	print("usage: replication_manager_check.py -H  -r")
+        print("usage: replication_manager_check.py -H  -r")
         print("--- ---- ---- ---- ---- ---- ----\n")
         print("main arguments:")
         print("-H hostname")
         print("\n")
         print("optional arguments:")
         print(" -h, --help  show this help message and exit")
-	print("-r replication manager path")
+        print("-r replication manager path")
         print("-p port")
         print("-t timeout")
         print("-v verbose")
@@ -120,7 +120,7 @@ def checkHealth(URL, arguments):
         return description, exit_code
 
     if todos["configIsValid"] == False:
-        desccription ='CRITICAL - Field configIsValid is false'
+        description ='CRITICAL - Field configIsValid is false'
         exit_code = 2
         return description, exit_code
 
