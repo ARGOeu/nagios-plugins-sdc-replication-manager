@@ -18,12 +18,13 @@ SDC Replication Manager: A probe to check the functionality of SDC Replication M
 
 ```
       replication_manager_check.py  [--help] [--verbose <level>]
-                   [--timeout <threshold> ] --hostname <host> [--port <port>]
+                   [--timeout <threshold> ] --hostname <host> [--rpath <rpat>] [--port <port>]
 ```
 
       Options:
        --help,-h         : Display this help.
-       --verbose,-v      : Same as debug option (0-9).
+       --verbose,-v      : Same as debug option (0-9) (supports 1 at the moment)
+       --rpath, -r       : The path of the replication manager
        --timeout,-t      : Time threshold to wait before timeout (in second).
 
        --hostname,-H     : The replication service server host <name or IP).

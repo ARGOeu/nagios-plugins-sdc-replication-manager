@@ -21,6 +21,11 @@ def ValidateValues(arguments):
             print_help()
             exit()
 
+        if arguments.rpath is None:
+            print("\nNo replication path provided\n")
+            print_help()
+            exit()
+
         if arguments.hostname is None:
             print("\nNo hostname provided\n")
             print_help()
@@ -35,13 +40,14 @@ def ValidateValues(arguments):
 def print_help():
         """ Print help values."""
 
-        print("usage: replication_manager_check.py -H -p")
+	print("usage: replication_manager_check.py -H  -r")
         print("--- ---- ---- ---- ---- ---- ----\n")
         print("main arguments:")
         print("-H hostname")
         print("\n")
         print("optional arguments:")
         print(" -h, --help  show this help message and exit")
+	print("-r replication manager path")
         print("-p port")
         print("-t timeout")
         print("-v verbose")
@@ -53,6 +59,8 @@ def debugValues(arguments):
     """
     if arguments.debug:
         print("[debugValues] - hostname: %s" % arguments.hostname)
+    if arguments.rpath != '':
+        print("[debugValues] - rpath: %s" % arguments.rpath)
     if arguments.port != '':
         print("[debugValues] - port: %s" % arguments.port)
     if arguments.timeout != '':
@@ -66,7 +74,9 @@ def checkHealth(URL, arguments):
            timeout : how long should we wait for a response from the server
     """
     response = None
-    u = URL + "api/api_v1/status"
+    u = URL + arguments.rpath + "api/api_v1/status"
+    if arguments.debug:
+        print("[debugValues] - finalPath: %s" % u)
     timeout = arguments.timeout
     try:
         headers = {'Content-Type': 'application/json'}
@@ -133,6 +143,7 @@ def main():
     parser = argparse.ArgumentParser(description='Replication Manager probe '
                                                  'Supports healthcheck.')
     parser.add_argument("--hostname", "-H", help='The Hostname of Replication service')
+    parser.add_argument("--rpath", "-r")
     parser.add_argument("--port", "-p", type=int)
     parser.add_argument("--timeout", "-t", metavar="seconds", help="Timeout in seconds. Must be greater than zero", type=int, default=30)
     parser.add_argument("--verbose", "-v", dest='debug', help='Set verbosity level', action='count', default=0)
@@ -141,7 +152,8 @@ def main():
 
     ValidateValues(arguments)
 
-    debugValues(arguments)
+    if arguments.debug:
+       debugValues(arguments)
     URL = arguments.hostname
     if arguments.port is not None:
         URL += ":%s" % arguments.port
