@@ -9,11 +9,6 @@ SDC Replication Manager: A probe to check the functionality of SDC Replication M
       replication_manager_check.py - SDC Replication Manager Nagios plugin
 ```
 
-### DESCRIPTION
-
-	RESTful HTTP-API for the B2STAGE service inside the EUDAT project.
-	The plugin checks the health of B2STAGE HTTP-API service.
-
 ### SYNOPSIS
 
 ```
