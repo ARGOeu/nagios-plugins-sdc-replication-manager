@@ -1,5 +1,5 @@
 Name:           nagios-plugins-sdc-replication-manager
-Version:        0.3
+Version:        0.4
 Release:        1%{?dist}
 Summary:        Nagios probe for SDC Replication Manager
 License:        GPLv3+
@@ -32,6 +32,8 @@ install -m 755 replication_manager_check.py %{buildroot}/%{_libexecdir}/argo-mon
 %attr(0755,root,root) /%{_libexecdir}/argo-monitoring/probes/sdc-replication-manager/replication_manager_check.py
 
 %changelog
+* Thu Apr 23 2020 Themis Zamani  <themiszamani@gmail.com> - 0.4-1
+- Update replication manager . Added more links and checks
 * Thu Apr 16 2020 Themis Zamani  <themiszamani@gmail.com> - 0.3-1
 - Packaging
 * Tue Apr 14 2020 Themis Zamani  <themiszamani@gmail.com> - 0.2-1

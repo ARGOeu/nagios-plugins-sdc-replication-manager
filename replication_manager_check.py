@@ -5,8 +5,11 @@ import sys
 import requests
 import argparse
 
-##{u'test_mode': u'false', u'enable_populate': u'false', u'datetime': u'20200411T21:42:26', u'configIsValid': u'true', u'version': u'1.0.43', u'edmo_code': u'269'}
-
+'''
+{u'test_mode': u'false', u'enable_populate': u'false',
+u'datetime': u'20200411T21:42:26', u'configIsValid': u'true',
+u'version': u'1.0.43', u'edmo_code': u'269'}
+'''
 
 # ##############################################################################
 # Replication Manager Client  #
@@ -47,6 +50,7 @@ def print_help():
         print("-t timeout")
         print("-v verbose")
 
+
 def debugValues(arguments):
     """ Print debug values.
         Args:
@@ -68,11 +72,30 @@ def checkHealth(URL, arguments):
            URL : service hostname
            timeout : how long should we wait for a response from the server
     """
+    if arguments.port is not None:
+        URL = URL[:-1] + ":%s" % arguments.port + "/"
+
     response = None
-    if arguments.rpath is None:
-        u = URL + "api/api_v1/status"
-    else: 
-        u = URL + arguments.rpath + "api/api_v1/status"
+    if arguments.rpath is not None:
+        u = URL[:-1] + arguments.rpath + "monitoring/"
+    else:
+        u = URL[:-1] + "/monitoring/"
+
+    if arguments.debug:
+        print("[debugValues] - finalPath: %s" % u)
+    headers = {'Content-Type': 'application/json'}
+    timeout = arguments.timeout
+    response = requests.get(url=u, timeout=timeout, headers=headers)
+    if response.status_code == 200:
+        u = URL[:-1] + arguments.rpath + "monitoring/"
+    else:
+        if arguments.rpath is None:
+            u = URL + "api/api_v1/status"
+        else:
+            if arguments.rpath.startswith('/') and URL.endswith('/'):
+                u = URL[:-1] + arguments.rpath + "api/api_v1/status"
+            else:
+                u = URL + arguments.rpath + "api/api_v1/status"
 
     if arguments.debug:
         print("[debugValues] - finalPath: %s" % u)
@@ -81,7 +104,9 @@ def checkHealth(URL, arguments):
         headers = {'Content-Type': 'application/json'}
         response = requests.get(url=u, timeout=timeout, headers=headers)
 
-        #############ERROR handlibg ##############
+    '''
+    #############ERROR handlibg ##############
+    '''
     except requests.exceptions.SSLError:
         description = "WARNING - Invalid SSL certificate"
         exit_code = 1
@@ -111,21 +136,22 @@ def checkHealth(URL, arguments):
 
     content = response.json()
     if arguments.debug:
-       print content
+        print content
     todos = json.loads(response.text)
     if 'configIsValid' not in todos:
-        description ='CRITICAL - Field configIsValid is missing from the response {0}'.format(str(todos))
+        description = 'CRITICAL - Field configIsValid is missing from the response {0}'.format(str(todos))
         exit_code = 1
         return description, exit_code
 
     if todos["configIsValid"] == False:
-        description ='CRITICAL - Field configIsValid is false'
+        description = 'CRITICAL - Field configIsValid is false'
         exit_code = 2
         return description, exit_code
 
     description = "OK - Service reachable"
     exit_code = 0
     return description, exit_code
+
 
 def printResult(description, exit_code):
     """ Print the predefined values
@@ -136,6 +162,7 @@ def printResult(description, exit_code):
 
     print(description)
     sys.exit(exit_code)
+
 
 def main():
 
@@ -152,14 +179,10 @@ def main():
     ValidateValues(arguments)
 
     if arguments.debug:
-       debugValues(arguments)
+        debugValues(arguments)
     URL = arguments.hostname
-    if arguments.port is not None:
-        URL += ":%s" % arguments.port
-
     description, exit_code = checkHealth(URL, arguments)
     printResult(description, exit_code)
 
 if __name__ == "__main__":
     main()
-
