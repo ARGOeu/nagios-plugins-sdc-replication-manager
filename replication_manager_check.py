@@ -104,9 +104,6 @@ def checkHealth(URL, arguments):
         headers = {'Content-Type': 'application/json'}
         response = requests.get(url=u, timeout=timeout, headers=headers)
 
-    '''
-    #############ERROR handlibg ##############
-    '''
     except requests.exceptions.SSLError:
         description = "WARNING - Invalid SSL certificate"
         exit_code = 1
