@@ -87,7 +87,10 @@ def checkHealth(URL, arguments):
     timeout = arguments.timeout
     response = requests.get(url=u, timeout=timeout, headers=headers)
     if response.status_code == 200:
-        u = URL[:-1] + arguments.rpath + "monitoring/"
+        if arguments.rpath is not None:
+            u = URL[:-1] + arguments.rpath + "monitoring/"
+        else:
+            u = URL[:-1] + "/monitoring/"
     else:
         if arguments.rpath is None:
             u = URL + "api/api_v1/status"
