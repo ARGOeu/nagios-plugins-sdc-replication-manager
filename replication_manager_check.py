@@ -85,8 +85,18 @@ def checkHealth(URL, arguments):
         print("[debugValues] - finalPath: %s" % u)
     headers = {'Content-Type': 'application/json', 'User-Agent':'rm-probe/1.0.0'}
     timeout = arguments.timeout
-    response = requests.get(url=u, timeout=timeout, headers=headers)
-    if response.status_code == 200:
+    try:
+        response = requests.get(url=u, timeout=timeout, headers=headers)
+    except requests.exceptions.ConnectTimeout:
+        description = "CRITICAL - Service unreachable"
+        exit_code = 2
+        #return description, exit_code
+    except requests.exceptions.Timeout as errt:
+        description = "CRITICAL - Connetion Timeout"
+        exit_code = 2
+        #return description, exit_code
+
+    if response and response.status_code == 200:
         if arguments.rpath is not None:
             u = URL[:-1] + arguments.rpath + "monitoring/"
         else:
@@ -115,10 +125,19 @@ def checkHealth(URL, arguments):
         description = "CRITICAL - Service unreachable"
         exit_code = 2
         return description, exit_code
+    except requests.exceptions.ConnectTimeout:
+        description = "CRITICAL - Service unreachable"
+        exit_code = 2
+        return description, exit_code
+    except requests.exceptions.Timeout as errt:
+        description = "CRITICAL - Connetion Timeout"
+        exit_code = 2
+        return description, exit_code
     except Exception as e:
         description = 'UNKNOWN - {0}'.format(str(e))
         exit_code = 3
         return description, exit_code
+
 
     if response is None:
         description = "UNKNOWN - Status unknown"
