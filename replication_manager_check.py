@@ -83,7 +83,7 @@ def checkHealth(URL, arguments):
 
     if arguments.debug:
         print("[debugValues] - finalPath: %s" % u)
-    headers = {'Content-Type': 'application/json'}
+    headers = {'Content-Type': 'application/json', 'User-Agent':'rm-probe/1.0.0'}
     timeout = arguments.timeout
     response = requests.get(url=u, timeout=timeout, headers=headers)
     if response.status_code == 200:
@@ -104,7 +104,7 @@ def checkHealth(URL, arguments):
         print("[debugValues] - finalPath: %s" % u)
     timeout = arguments.timeout
     try:
-        headers = {'Content-Type': 'application/json'}
+        headers = {'Content-Type': 'application/json', 'User-Agent':'rm-probe/1.0.0'}
         response = requests.get(url=u, timeout=timeout, headers=headers)
 
     except requests.exceptions.SSLError:
