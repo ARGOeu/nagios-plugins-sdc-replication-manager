@@ -149,7 +149,7 @@ def checkHealth(URL, arguments):
         exit_code = 2
         return description, exit_code
     if response.status_code != 200:
-        description = "WARNING - Unexpected status code %s" % response.status_code
+        description = "CRITICAL - Unexpected status code %s" % response.status_code
         exit_code = 1
         return description, exit_code
 
