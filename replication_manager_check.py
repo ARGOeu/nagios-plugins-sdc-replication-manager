@@ -86,15 +86,37 @@ def checkHealth(URL, arguments):
     headers = {'Content-Type': 'application/json', 'User-Agent':'rm-probe/1.0.0'}
     timeout = arguments.timeout
     try:
-        response = requests.get(url=u, timeout=timeout, headers=headers)
+        response = requests.get(url=u, timeout=timeout, headers=headers, verify=False)
     except requests.exceptions.ConnectTimeout:
         description = "CRITICAL - Service unreachable"
         exit_code = 2
         #return description, exit_code
     except requests.exceptions.Timeout as errt:
-        description = "CRITICAL - Connetion Timeout"
+        description = "CRITICAL - Connetion Timeout- {0}".format(str(errt))
         exit_code = 2
         #return description, exit_code
+    except requests.exceptions.HTTPError as errh:
+        description = "CRITICAL - HTTP Errr - {0}".format(str(errh))
+        exit_code = 2
+    except requests.exceptions.ConnectionError as errc:
+        description = "CRITICAL - Error Connecting - {0}".format(str(errc))
+        exit_code = 2
+    except requests.exceptions.RequestException as err:
+        description = "CRITICAL - Something Else - {0}".format(str(err))
+        exit_code = 2
+
+    if response and response.status_code == 200:
+        if arguments.debug:
+            print "monitoring"
+            print response.text
+            content = response.json()
+        if arguments.debug:
+            print content
+        todos = json.loads(response.text)
+        if 'configIsValid' in todos:
+            description = "OK - Service reachable"
+            exit_code = 0
+            return description, exit_code
 
     if response and response.status_code == 200:
         if arguments.rpath is not None:
@@ -116,6 +138,11 @@ def checkHealth(URL, arguments):
     try:
         headers = {'Content-Type': 'application/json', 'User-Agent':'rm-probe/1.0.0'}
         response = requests.get(url=u, timeout=timeout, headers=headers)
+        if arguments.debug:
+            print "api_v1"
+            print response
+            if response :
+                print response.text
 
     except requests.exceptions.SSLError:
         description = "WARNING - Invalid SSL certificate"
